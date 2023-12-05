@@ -9,4 +9,6 @@ package Calibration is
 
    function Calibrate (input : Calibration_Vectors.Vector) return Integer;
 
+   function Parse (str : String) return Integer;
+
 end Calibration;

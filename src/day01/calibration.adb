@@ -1,20 +1,38 @@
---with Ada.Strings; use Ada.Strings;
-with Ada.Text_IO;      use Ada.Text_IO;
+with Ada.Text_IO;             use Ada.Text_IO;
+with Ada.Characters.Handling; use Ada.Characters.Handling;
 
 package body Calibration is
 
-    function Calibrate (input: Calibration_Vectors.Vector) return Integer is
+    package Digit_Vectors is new Ada.Containers.Indefinite_Vectors
+       (Index_Type => Natural, Element_Type => Character);
 
-        sum   : Integer := 0;
+    function Calibrate (input : Calibration_Vectors.Vector) return Integer is
+
+        sum : Integer := 0;
 
     begin
-
-        for element of input loop
-            -- TODO parse
-            Put_Line (element);
+        for input_line of input loop
+            sum := sum + Parse (input_line);
         end loop;
 
         return sum;
     end Calibrate;
+
+    function Parse (str : String) return Integer is
+
+        found_digits : Digit_Vectors.Vector;
+        digit_str    : String(1..2);
+
+    begin
+        for i in str'Range loop
+            if Is_Digit (str (i)) then
+                found_digits.Append (str (i));
+            end if;
+        end loop;
+
+        digit_str := (found_digits.First_Element, found_digits.Last_Element);
+
+        return Integer'Value (digit_str);
+    end Parse;
 
 end Calibration;
